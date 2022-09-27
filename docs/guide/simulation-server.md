@@ -121,6 +121,20 @@ If you are installing the simulation server on the same machine as the session s
     RewriteRule ^/3(\d{3})/(.*)$ "http://<IP address 3>:$1/$2" [P,L] # other simulation server with ports in the range 3000-3999
     ⋮
     ```
+    
+    - nginx Configuration
+    
+    ```
+     location ~* ^/([0-9]+){
+	        rewrite ^/([0-9]+)/(.*) $1/$2 break;
+                proxy_pass http://localhost:$1/$2;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "Upgrade";
+                proxy_set_header Host $host;
+                }
+      } 
+```
 
 4. Configure the session server to use this simulation server: edit `~/webots-server/config/session/session.json` to add the simulation server in the simulationServers section:
 
